@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeliBurger - Comida Rápida</title>
+    <style>
+        :root {
+            --primary: #ff6b35;
+            --secondary: #f7c59f;
+            --accent: #efefd0;
+            --dark: #004e89;
+            --light: #f8f8f8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: #333;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        nav {
+            background-color: var(--dark);
+            padding: 0.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav li {
+            margin: 0 1rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5rem;
+        }
+        
+        nav a:hover {
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .hero {
+            background-color: var(--secondary);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .offers {
+            background-color: var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .offers h2 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .offer-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .offer-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 45%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .offer-card .offer-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            font-weight: bold;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(15deg);
+        }
+        
+        .offer-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .offer-card .details {
+            padding: 1rem;
+        }
+        
+        .offer-card .original-price {
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        .offer-card .offer-price {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .offer-card button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        
+        .categories {
+            margin-bottom: 2rem;
+        }
+        
+        .category {
+            margin-bottom: 2rem;
+        }
+        
+        .category h2 {
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .product-card .details {
+            padding: 1rem;
+        }
+        
+        .product-card h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-card .price {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-card .ingredients {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-card .origin {
+            font-size: 0.8rem;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .product-card button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .product-card button:hover {
+            background-color: #e55a24;
+        }
+        
+        .cart-section {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+        }
+        
+        .cart-button {
+            background-color: var(--dark);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .cart-container {
+            position: fixed;
+            right: 20px;
+            bottom: 90px;
+            width: 350px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 1rem;
+            display: none;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .cart-container h3 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-items {
+            margin-bottom: 1rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: bold;
+        }
+        
+        .cart-item-price {
+            color: var(--primary);
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quantity-btn {
+            background-color: #eee;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .checkout-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 4px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .location-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .location-section h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .map-container {
+            height: 300px;
+            background-color: #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .location-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .location-info div {
+            flex: 1;
+        }
+        
+        .location-label {
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .social-links {
+            margin: 1rem 0;
+        }
+        
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .offer-card {
+                width: 100%;
+            }
+            
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            .cart-container {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DeliBurger</h1>
+        <p>¡Las mejores hamburguesas y comida rápida de la ciudad!</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#hamburguesas">Hamburguesas</a></li>
+            <li><a href="#papas">Papas</a></li>
+            <li><a href="#malteadas">Malteadas</a></li>
+            <li><a href="#postres">Postres</a></li>
+            <li><a href="#ubicacion">Ubicación</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section class="hero">
+            <h2>¡Bienvenido a DeliBurger!</h2>
+            <p>Disfruta de nuestros deliciosos productos preparados con ingredientes frescos y de alta calidad.</p>
+        </section>
+        
+        <section class="offers">
+            <h2>¡OFERTAS ESPECIALES!</h2>
+            <div class="offer-container">
+                <div class="offer-card">
+                    <div class="offer-badge">-30%</div>
+                    <img src="/api/placeholder/400/320" alt="Combo DeliBurger">
+                    <div class="details">
+                        <h3>Combo DeliBurger</h3>
+                        <p>Hamburguesa clásica + papas medianas + bebida</p>
+                        <p class="ingredients">Carne premium, queso cheddar, tomate, lechuga, cebolla caramelizada</p>
+                        <p class="origin">Carne: Res nacional de San Vicente</p>
+                        <p><span class="original-price">$35.000 COP</span> <span class="offer-price">$24.500 COP</span></p>
+                        <button onclick="addToCart('Combo DeliBurger', 24500)">Añadir al carrito</button>
+                    </div>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-badge">-25%</div>
+                    <img src="/api/placeholder/400/320" alt="Malteada Chocolate">
+                    <div class="details">
+                        <h3>Malteada de Chocolate Premium</h3>
+                        <p>Malteada grande con helado artesanal y topping</p>
+                        <p class="ingredients">Helado de chocolate, leche, crema batida, chispas de chocolate</p>
+                        <p class="origin">Chocolate: Importado de Bélgica</p>
+                        <p><span class="original-price">$18.000 COP</span> <span class="offer-price">$13.500 COP</span></p>
+                        <button onclick="addToCart('Malteada de Chocolate Premium', 13500)">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="categories">
+            <section id="hamburguesas" class="category">
+                <h2>Hamburguesas</h2>
+                <div class="products">
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Hamburguesa Clásica">
+                        <div class="details">
+                            <h3>Hamburguesa Clásica</h3>
+                            <p class="price">$22.000 COP</p>
+                            <p class="ingredients">Carne de res (180g), queso cheddar, tomate, lechuga, cebolla, salsa especial</p>
+                            <p class="origin">Carne: Res nacional de San Vicente</p>
+                            <button onclick="addToCart('Hamburguesa Clásica', 22000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Hamburguesa Mexicana">
+                        <div class="details">
+                            <h3>Hamburguesa Mexicana</h3>
+                            <p class="price">$26.000 COP</p>
+                            <p class="ingredients">Carne de res (180g), guacamole, jalapeños, queso fundido, pico de gallo, salsa picante</p>
+                            <p class="origin">Aguacate: Valle del Cauca</p>
+                            <button onclick="addToCart('Hamburguesa Mexicana', 26000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Hamburguesa BBQ">
+                        <div class="details">
+                            <h3>Hamburguesa BBQ Ahumada</h3>
+                            <p class="price">$28.000 COP</p>
+                            <p class="ingredients">Carne ahumada (200g), bacon, queso gouda, cebolla caramelizada, salsa BBQ casera</p>
+                            <p class="origin">Carne: Res Premium Antioqueña</p>
+                            <button onclick="addToCart('Hamburguesa BBQ Ahumada', 28000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="papas" class="category">
+                <h2>Papas</h2>
+                <div class="products">
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Papas Clásicas">
+                        <div class="details">
+                            <h3>Papas Clásicas</h3>
+                            <p class="price">$8.500 COP</p>
+                            <p class="ingredients">Papas frescas, sal marina</p>
+                            <p class="origin">Papas: Cultivos de Boyacá</p>
+                            <button onclick="addToCart('Papas Clásicas', 8500)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Papas Cheddar">
+                        <div class="details">
+                            <h3>Papas con Cheddar y Bacon</h3>
+                            <p class="price">$14.000 COP</p>
+                            <p class="ingredients">Papas frescas, queso cheddar derretido, bacon crujiente, cebollín</p>
+                            <p class="origin">Queso: Importado de Wisconsin, USA</p>
+                            <button onclick="addToCart('Papas con Cheddar y Bacon', 14000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="malteadas" class="category">
+                <h2>Malteadas</h2>
+                <div class="products">
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Malteada Vainilla">
+                        <div class="details">
+                            <h3>Malteada de Vainilla</h3>
+                            <p class="price">$15.000 COP</p>
+                            <p class="ingredients">Helado de vainilla, leche, crema batida, chispas de chocolate</p>
+                            <p class="origin">Vainilla: Importada de Madagascar</p>
+                            <button onclick="addToCart('Malteada de Vainilla', 15000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Malteada Fresa">
+                        <div class="details">
+                            <h3>Malteada de Fresa</h3>
+                            <p class="price">$15.000 COP</p>
+                            <p class="ingredients">Helado de fresa, leche, fresas frescas, crema batida</p>
+                            <p class="origin">Fresas: Cultivadas en Santa Elena</p>
+                            <button onclick="addToCart('Malteada de Fresa', 15000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="postres" class="category">
+                <h2>Postres</h2>
+                <div class="products">
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Brownie con Helado">
+                        <div class="details">
+                            <h3>Brownie con Helado</h3>
+                            <p class="price">$12.500 COP</p>
+                            <p class="ingredients">Brownie casero de chocolate, helado de vainilla, salsa de chocolate</p>
+                            <p class="origin">Chocolate: Nacional de Santander</p>
+                            <button onclick="addToCart('Brownie con Helado', 12500)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Cheesecake">
+                        <div class="details">
+                            <h3>Cheesecake de Frutos Rojos</h3>
+                            <p class="price">$14.000 COP</p>
+                            <p class="ingredients">Base de galleta, queso crema, salsa de frutos rojos, fresas frescas</p>
+                            <p class="origin">Frutos rojos: Cultivados en Cundinamarca</p>
+                            <button onclick="addToCart('Cheesecake de Frutos Rojos', 14000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/400/320" alt="Sundae">
+                        <div class="details">
+                            <h3>Sundae Caramelo</h3>
+                            <p class="price">$10.000 COP</p>
+                            <p class="ingredients">Helado de vainilla, salsa de caramelo, nueces caramelizadas</p>
+                            <p class="origin">Nueces: Importadas de California</p>
+                            <button onclick="addToCart('Sundae Caramelo', 10000)">Añadir al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        
+        <section id="ubicacion" class="location-section">
+            <h2>Encuentra Tu Restaurante Más Cercano</h2>
+            <div class="map-container" id="map">
+                <!-- Aquí se mostrará el mapa -->
+            </div>
+            <div class="location-info">
+                <div>
+                    <p class="location-label">Restaurante más cercano:</p>
+                    <p id="nearest-restaurant">Buscando...</p>
+                </div>
+                <div>
+                    <p class="location-label">Distancia:</p>
+                    <p id="distance">Calculando...</p>
+                </div>
+                <div>
+                    <p class="location-label">Tiempo estimado de entrega:</p>
+                    <p id="eta">Calculando...</p>
+                </div>
+            </div>
+            <button id="find-location" class="checkout-btn">Encontrar mi ubicación</button>
+        </section>
+    </main>
+    
+    <div class="cart-section">
+        <div class="cart-container" id="cart-container">
+            <h3>Tu Pedido</h3>
+            <div class="cart-items" id="cart-items">
+                <!-- Los items del carrito se mostrarán aquí -->
+                <p id="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">$0 COP</span>
+            </div>
+            <button class="checkout-btn">Proceder al pago</button>
+        </div>
+        <button class="cart-button" id="cart-button">
+            🛒
+            <span class="cart-count" id="cart-count">0</span>
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 DeliBurger - Todos los derechos reservados</p>
+        <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+            <a href="#">Twitter</a>
+        </div>
+        <p>Contáctanos: info@deliburger.co | Tel: +57 300 123 4567</p>
+    </footer>
+    
+    <script>
+        // Array para almacenar los productos en el carrito
+        let cartItems = [];
+        let total = 0;
+        let cartOpen = false;
+        
+        // Información de restaurantes
+        const restaurants = [
+            { name: "DeliBurger Centro", lat: 4.6097, lng: -74.0817, address: "Calle 19 #5-30, Bogotá" },
+            { name: "DeliBurger Chapinero", lat: 4.6430, lng: -74.0632, address: "Carrera 7 #45-28, Bogotá" },
+            { name: "DeliBurger Usaquén", lat: 4.6917, lng: -74.0310, address: "Calle 116 #7-15, Bogotá" },
+            { name: "DeliBurger Salitre", lat: 4.6562, lng: -74.1086, address: "Av. El Dorado #68C-61, Bogotá" }
+        ];
+        
+        // Función para añadir productos al carrito
+        function addToCart(name, price) {
+            const existingItem = cartItems.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cartItems.push({
+                    name: name,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            
+            // Mostrar notificación
+            alert(`"${name}" añadido al carrito`);
+        }
+        
+        // Función para actualizar el carrito
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+            const emptyCart = document.getElementById('empty-cart');
+            
+            // Limpiar el contenido anterior
+            cartItemsContainer.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartItemsContainer.appendChild(emptyCart);
+                cartCount.textContent = '0';
+                cartTotal.textContent = '$0 COP';
+                return;
+            }
+            
+            // Calcular total y contar items
+            total = 0;
+            let itemCount = 0;
+            
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                itemCount += item.quantity;
+                
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                cartItemElement.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toLocaleString()} COP</div>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn" onclick="updateItemQuantity('${item.name}', -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateItemQuantity('${item.name}', 1)">+</button>
+                    </div>
+                `;
+                
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+            
+            cartCount.textContent = itemCount.toString();
+            cartTotal.textContent = `$${total.toLocaleString()} COP`;
+        }
+        
+        // Función para actualizar la cantidad de un item
+        function updateItemQuantity(name, change) {
+            const item = cartItems.find(item => item.name === name);
+            
+            if (item) {
+                item.quantity += change;
+                
+                if (item.quantity <= 0) {
+                    cartItems = cartItems.filter(i => i.name !== name);
+                }
+                
+                updateCart();
+            }
+        }
+        
+        // Togglear visibilidad del carrito
+        document.getElementById('cart-button').addEventListener('click', function() {
+            const cartContainer = document.getElementById('cart-container');
+            cartOpen = !cartOpen;
+            
+            if (cartOpen) {
+                cartContainer.style.display = 'block';
+            } else {
+                cartContainer.style.display = 'none';
+            }
+        });
+        
+        // Simular la funcionalidad de ubicación
+        document.getElementById('find-location').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                alert("Simulando búsqueda de ubicación...");
+                
+                // Simular ubicación en Bogotá
+                const userLat = 4.6486;
+                const userLng = -74.0752;
+                
+                // Encontrar el restaurante más cercano
+                let nearestRestaurant = null;
+                let shortestDistance = Infinity;
+                
+                restaurants.forEach(restaurant => {
+                    const distance = calculateDistance(userLat, userLng, restaurant.lat, restaurant.lng);
+                    if (distance < shortestDistance) {
+                        shortestDistance = distance;
+                        nearestRestaurant = restaurant;
+                    }
+                });
+                
+                // Mostrar información
+                document.getElementById('nearest-restaurant').textContent = nearestRestaurant.name + " - " + nearestRestaurant.address;
+                document.getElementById('distance').textContent = shortestDistance.toFixed(1) + " km";
+                
+                // Calcular tiempo estimado (asumiendo 5 min por km + 15 min de preparación)
+                const estimatedTime = Math.ceil(shortestDistance * 5) + 15;
+                document.getElementById('eta').textContent = estimatedTime + " minutos";
+                
+                // Simular mapa
+                const map = document.getElementById('map');
+                map.innerHTML = `
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #cadeef; flex-direction: column;">
+                        <div style="font-size: 18px; margin-bottom: 10px;">Mapa de Ruta</div>
+                        <div style="width: 80%; height: 2px; background-color: #ff6b35; position: relative; margin: 20px 0;">
+                            <div style="position: absolute; left: 0; top: -8px
